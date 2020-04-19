@@ -92,7 +92,7 @@ void WaypointNavTool::onInitialize()
   frame_ = new WaypointFrame(context_, &sn_map_, &server_, &unique_ind_, NULL, this);
 
   if (window_context)
-    frame_dock_ = window_context->addPane("Waypoint Navigation", frame_);
+    frame_dock_ = window_context->addPane("Hagen Planner", frame_);
 
   frame_->enable();
 

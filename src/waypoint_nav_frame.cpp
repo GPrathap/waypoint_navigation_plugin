@@ -74,13 +74,16 @@ WaypointFrame::WaypointFrame(rviz::DisplayContext *context, std::map<int, Ogre::
   ui_->setupUi(this);
 
   wp_pub_ = nh_.advertise<nav_msgs::Path>("waypoints", 1);
-
+  stop_execution_pub_ = nh_.advertise<std_msgs::Empty>("/planning/stop_execution", 1);
+  continue_execution_pub_ = nh_.advertise<std_msgs::Empty>("/planning/continue_execution", 1);
   //connect the Qt signals and slots
   connect(ui_->publish_wp_button, SIGNAL(clicked()), this, SLOT(publishButtonClicked()));
   connect(ui_->topic_line_edit, SIGNAL(editingFinished()), this, SLOT(topicChanged()));
   connect(ui_->frame_line_edit, SIGNAL(editingFinished()), this, SLOT(frameChanged()));
   connect(ui_->wp_height_doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(heightChanged(double)));
   connect(ui_->clear_all_button, SIGNAL(clicked()), this, SLOT(clearAllWaypoints()));
+  connect(ui_->stop_execution_button, SIGNAL(clicked()), this, SLOT(stopExecution()));
+  connect(ui_->continue_execution_button, SIGNAL(clicked()), this, SLOT(continueExecution()));
 
   connect(ui_->x_doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(poseChanged(double)));
   connect(ui_->y_doubleSpinBox, SIGNAL(valueChanged(double)), this, SLOT(poseChanged(double)));
@@ -196,7 +199,7 @@ void WaypointFrame::loadButtonClicked()
       nav_msgs::Path::ConstPtr p = m.instantiate<nav_msgs::Path>();
       if (p != NULL)
       {
-        ROS_INFO("n waypoints %d", p->poses.size());
+        ROS_INFO("n waypoints %d", (int)p->poses.size());
 
         for(int i = 0; i < p->poses.size(); i++)
         {
@@ -264,6 +267,20 @@ void WaypointFrame::clearAllWaypoints()
   //clear the interactive markers
   server_->clear();
   server_->applyChanges();
+}
+
+void WaypointFrame::stopExecution()
+{
+  std_msgs::Empty msg;
+  stop_execution_pub_.publish(msg);
+  ROS_INFO("Stop execution");
+}
+
+void WaypointFrame::continueExecution()
+{
+  std_msgs::Empty msg;
+  continue_execution_pub_.publish(msg);
+  ROS_INFO("Continue execution");
 }
 
 void WaypointFrame::heightChanged(double h)

@@ -43,7 +43,7 @@
 #endif
 
 #include <QWidget>
-
+#include <std_msgs/Empty.h>
 #include "ros/ros.h"
 #include <nav_msgs/Path.h>
 
@@ -118,11 +118,15 @@ private Q_SLOTS:
   void poseChanged(double val);
   void saveButtonClicked();
   void loadButtonClicked();
+  void stopExecution();
+  void continueExecution();
 
 private:
 
   ros::NodeHandle nh_;
   ros::Publisher wp_pub_;
+  ros::Publisher stop_execution_pub_;
+  ros::Publisher continue_execution_pub_;
 
   WaypointNavTool* wp_nav_tool_;
   //pointers passed via contructor

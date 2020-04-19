@@ -13,6 +13,7 @@
 
   <depend>rviz</depend>
   <depend>rosbag</depend>
+  <depend>std_msgs</depend>
 
   <export>
     <rosdoc config="${prefix}/rosdoc.yaml"/>
